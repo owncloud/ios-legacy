@@ -48,6 +48,7 @@
 #import "OCSplitViewController.h"
 #import "InitializeDatabase.h"
 #import "HelpGuideViewController.h"
+#import "UpdateGuideViewController.h"
 #import "SyncFolderManager.h"
 #import "DownloadFileSyncFolder.h"
 #import "CheckFeaturesSupported.h"
@@ -179,6 +180,8 @@ float shortDelay = 0.3;
     
     UserDto *user = [ManageUsersDB getActiveUser];
 
+
+
     if (user) {
 
         self.activeUser = [user copy];
@@ -206,11 +209,13 @@ float shortDelay = 0.3;
         }
         
         
-    } else if (k_show_main_help_guide && [ManageDB getShowHelpGuide]) {
-            self.helpGuideWindowViewController = [HelpGuideViewController new];
-            self.window.rootViewController = self.helpGuideWindowViewController;
-    } else {
-        
+	} else if (![[NSUserDefaults standardUserDefaults] boolForKey:@"didShowUpdateGuide"]) {
+		self.updateGuideWindowViewController = [UpdateGuideViewController new];
+		self.window.rootViewController = self.updateGuideWindowViewController;
+	} else if (k_show_main_help_guide && [ManageDB getShowHelpGuide]) {
+		self.helpGuideWindowViewController = [HelpGuideViewController new];
+		self.window.rootViewController = self.helpGuideWindowViewController;
+	} else {
         [self showPassCodeIfNeeded];
     }
     

@@ -273,6 +273,14 @@
 		230A2D2E203340F4006CE677 /* OpenInAppHandlerNoInternet.m in Sources */ = {isa = PBXBuildFile; fileRef = 230A2D2D203340F4006CE677 /* OpenInAppHandlerNoInternet.m */; };
 		230A2D3120341EB3006CE677 /* UniversalLinksContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 230A2D3020341EB3006CE677 /* UniversalLinksContext.m */; };
 		2393E620202897AB00747F7A /* OpenInAppHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 2393E61E202897AB00747F7A /* OpenInAppHandler.m */; };
+		39011F9722C359DE0038F4C8 /* teaser@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 39011F9622C359DE0038F4C8 /* teaser@2x.png */; };
+		39011F9A22C3656F0038F4C8 /* UpdateGuideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 39011F9922C3656F0038F4C8 /* UpdateGuideViewController.m */; };
+		39011F9D22C3AE560038F4C8 /* teaser_pdf@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 39011F9C22C3AE560038F4C8 /* teaser_pdf@2x.png */; };
+		39011F9F22C3B1080038F4C8 /* teaser_action@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 39011F9E22C3B1080038F4C8 /* teaser_action@2x.png */; };
+		39011FA122C3B3200038F4C8 /* teaser_quick@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 39011FA022C3B3200038F4C8 /* teaser_quick@2x.png */; };
+		39011FA322C3B3C30038F4C8 /* teaser_accounts@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 39011FA222C3B3C30038F4C8 /* teaser_accounts@2x.png */; };
+		39011FA522C3B5A60038F4C8 /* teaser_photos@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 39011FA422C3B5A60038F4C8 /* teaser_photos@2x.png */; };
+		39011FA922C3B8DE0038F4C8 /* teaser_app_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 39011FA822C3B8DE0038F4C8 /* teaser_app_icon@2x.png */; };
 		4007876D1C44EAEE00486A26 /* ShareEditUserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4007876C1C44EAEE00486A26 /* ShareEditUserViewController.xib */; };
 		400787721C44F4D400486A26 /* ShareEditUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 400787711C44F4D400486A26 /* ShareEditUserViewController.m */; };
 		400A63641B4FD75600890579 /* IFTTTAlphaAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 400A632D1B4FD75600890579 /* IFTTTAlphaAnimation.m */; };
@@ -1389,6 +1397,15 @@
 		230A2D3020341EB3006CE677 /* UniversalLinksContext.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = UniversalLinksContext.m; path = OpenInApp/UniversalLinksContext.m; sourceTree = "<group>"; };
 		2393E61E202897AB00747F7A /* OpenInAppHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OpenInAppHandler.m; path = OpenInApp/OpenInAppHandler.m; sourceTree = "<group>"; };
 		2393E61F202897AB00747F7A /* OpenInAppHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenInAppHandler.h; path = OpenInApp/OpenInAppHandler.h; sourceTree = "<group>"; };
+		39011F9622C359DE0038F4C8 /* teaser@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "teaser@2x.png"; sourceTree = "<group>"; };
+		39011F9822C3656F0038F4C8 /* UpdateGuideViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UpdateGuideViewController.h; sourceTree = "<group>"; };
+		39011F9922C3656F0038F4C8 /* UpdateGuideViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UpdateGuideViewController.m; sourceTree = "<group>"; };
+		39011F9C22C3AE560038F4C8 /* teaser_pdf@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "teaser_pdf@2x.png"; sourceTree = "<group>"; };
+		39011F9E22C3B1080038F4C8 /* teaser_action@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "teaser_action@2x.png"; sourceTree = "<group>"; };
+		39011FA022C3B3200038F4C8 /* teaser_quick@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "teaser_quick@2x.png"; sourceTree = "<group>"; };
+		39011FA222C3B3C30038F4C8 /* teaser_accounts@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "teaser_accounts@2x.png"; sourceTree = "<group>"; };
+		39011FA422C3B5A60038F4C8 /* teaser_photos@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "teaser_photos@2x.png"; sourceTree = "<group>"; };
+		39011FA822C3B8DE0038F4C8 /* teaser_app_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "teaser_app_icon@2x.png"; sourceTree = "<group>"; };
 		4002B01A1D421A7100520FB3 /* sq */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sq; path = sq.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4002B01C1D421A8300520FB3 /* sl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sl; path = sl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4007876C1C44EAEE00486A26 /* ShareEditUserViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ShareEditUserViewController.xib; path = Tabs/FileTab/Share/ShareEditUserViewController.xib; sourceTree = "<group>"; };
@@ -2500,6 +2517,7 @@
 		1487F15D177C35AA004A1A5A /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				39011F9B22C367D30038F4C8 /* Update Guide */,
 				400A63251B4FD2C100890579 /* HelpGuide */,
 				1487F15E177C35AA004A1A5A /* ImageBranding */,
 				1487F1B7177C35AA004A1A5A /* ImageSystem */,
@@ -2994,6 +3012,20 @@
 			name = OpenInApp;
 			sourceTree = "<group>";
 		};
+		39011F9B22C367D30038F4C8 /* Update Guide */ = {
+			isa = PBXGroup;
+			children = (
+				39011FA822C3B8DE0038F4C8 /* teaser_app_icon@2x.png */,
+				39011FA422C3B5A60038F4C8 /* teaser_photos@2x.png */,
+				39011FA222C3B3C30038F4C8 /* teaser_accounts@2x.png */,
+				39011FA022C3B3200038F4C8 /* teaser_quick@2x.png */,
+				39011F9E22C3B1080038F4C8 /* teaser_action@2x.png */,
+				39011F9C22C3AE560038F4C8 /* teaser_pdf@2x.png */,
+				39011F9622C359DE0038F4C8 /* teaser@2x.png */,
+			);
+			path = "Update Guide";
+			sourceTree = "<group>";
+		};
 		400A63251B4FD2C100890579 /* HelpGuide */ = {
 			isa = PBXGroup;
 			children = (
@@ -3096,6 +3128,8 @@
 				40EDF8A21B4D152300700E3A /* MyCustomAnimation.m */,
 				40EDF8A01B4D125A00700E3A /* HelpGuideViewController.h */,
 				40EDF89E1B4D123500700E3A /* HelpGuideViewController.m */,
+				39011F9822C3656F0038F4C8 /* UpdateGuideViewController.h */,
+				39011F9922C3656F0038F4C8 /* UpdateGuideViewController.m */,
 			);
 			path = HelpGuide;
 			sourceTree = "<group>";
@@ -4041,6 +4075,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				es,
 				de,
@@ -4122,6 +4157,7 @@
 				148DD5C3177850B100FB9977 /* CustomCellFileAndDirectory.xib in Resources */,
 				40C663AA1EFA4FBE004AF994 /* Main.storyboard in Resources */,
 				14A4796B18EC6FDF003500BA /* FileFavoriteIcon@2x.png in Resources */,
+				39011FA322C3B3C30038F4C8 /* teaser_accounts@2x.png in Resources */,
 				59F470321C5F97BA005B6091 /* Launch Screen.storyboard in Resources */,
 				EABD88F91BBE82C400DA5281 /* NotificationBackgroundSuccess.png in Resources */,
 				13A5ADBA18883C77000EB617 /* WhatsappShareiphone@2x.png in Resources */,
@@ -4243,6 +4279,7 @@
 				1487F23C177C35AA004A1A5A /* TABrecents.png in Resources */,
 				EABF68D71889339200A2217C /* SharedViewController.xib in Resources */,
 				EA5C6F891B70BF370088071B /* ShareLinkOptionCell.xib in Resources */,
+				39011FA122C3B3200038F4C8 /* teaser_quick@2x.png in Resources */,
 				1487F23D177C35AA004A1A5A /* TABrecents@2x.png in Resources */,
 				1487F23E177C35AA004A1A5A /* TABsettings.png in Resources */,
 				59D717E11959755600075E02 /* folder-shared@2x.png in Resources */,
@@ -4272,6 +4309,7 @@
 				1487F249177C35AA004A1A5A /* NonSecureConnectionIcon@2x.png in Resources */,
 				59EDC42C1C611F9A0050939C /* btnAllHelpGrey@2x.png in Resources */,
 				906414351D004719000AEFE5 /* available_offline_TB-filled@3x.png in Resources */,
+				39011F9D22C3AE560038F4C8 /* teaser_pdf@2x.png in Resources */,
 				1487F24A177C35AA004A1A5A /* ReconnectIcon.png in Resources */,
 				1487F24B177C35AA004A1A5A /* ReconnectIcon@2x.png in Resources */,
 				1487F24C177C35AA004A1A5A /* RevealPasswordIcon.png in Resources */,
@@ -4287,9 +4325,11 @@
 				EABD88ED1BBE82C400DA5281 /* NotificationBackgroundErrorIcon@2x.png in Resources */,
 				EA2B4FB217FC2CCE001766BB /* company_empty_screen_ipad@2x.png in Resources */,
 				1487F250177C35AA004A1A5A /* cancel_download.png in Resources */,
+				39011F9722C359DE0038F4C8 /* teaser@2x.png in Resources */,
 				1487F251177C35AA004A1A5A /* cancel_download@2x.png in Resources */,
 				59EDC4311C611F9A0050939C /* btnHelpPage4@2x.png in Resources */,
 				EABD890D1BBE82C400DA5281 /* NotificationBackgroundWarning@2x.png in Resources */,
+				39011FA922C3B8DE0038F4C8 /* teaser_app_icon@2x.png in Resources */,
 				14A4796218EBF174003500BA /* favoriteTB@2x.png in Resources */,
 				4052B4DA1B4ECD3A000788DA /* btnHelpPage0.png in Resources */,
 				1487F252177C35AA004A1A5A /* genericFile_icon.png in Resources */,
@@ -4309,6 +4349,7 @@
 				40F2F6131C5A180700129F92 /* owncloudLogoFiles.png in Resources */,
 				1487F25B177C35AA004A1A5A /* arrow_button@2x.png in Resources */,
 				1487F25C177C35AA004A1A5A /* conarrow_button.png in Resources */,
+				39011FA522C3B5A60038F4C8 /* teaser_photos@2x.png in Resources */,
 				59EDC41E1C611CE10050939C /* iphoneInstantUpload@2x.png in Resources */,
 				1487F25D177C35AA004A1A5A /* conarrow_button@2x.png in Resources */,
 				14A7F7AE18ED5C06009AF347 /* folder_icon@2x~ipad.png in Resources */,
@@ -4416,6 +4457,7 @@
 				EA4914731AC0346100BECF0B /* TTOpenInAppActivity@2x.png in Resources */,
 				13AA2C9B17D8AFCB00DB5E11 /* tabBar.png in Resources */,
 				906414311D004719000AEFE5 /* available_offline_TB@2x.png in Resources */,
+				39011F9F22C3B1080038F4C8 /* teaser_action@2x.png in Resources */,
 				40CF2C6C1C491C610047969A /* ShareUserPrivilegeCell.xib in Resources */,
 				149D98C1195AAD54005E0C73 /* fileSharedByLink.png in Resources */,
 				13AA2C9C17D8AFCB00DB5E11 /* tabBar@2x.png in Resources */,
@@ -4811,6 +4853,7 @@
 				596C06081CF47278004BCF51 /* ELCAlbumPickerController.m in Sources */,
 				148DD6A91778668A00FB9977 /* SelectFolderViewController.m in Sources */,
 				148DD6AB1778668A00FB9977 /* UINavigationController+KeyboardDismiss.m in Sources */,
+				39011F9A22C3656F0038F4C8 /* UpdateGuideViewController.m in Sources */,
 				596C060A1CF47278004BCF51 /* ELCAssetCell.m in Sources */,
 				59C71D221A9216AE00F66166 /* ReaderViewController.m in Sources */,
 				59C71D211A9216AE00F66166 /* ReaderThumbView.m in Sources */,

@@ -45,6 +45,7 @@
 #import "InstantUpload.h"
 #import "CheckFeaturesSupported.h"
 #import "UtilsFileSystem.h"
+#import "UpdateGuideViewController.h"
 
 //Settings table view size separator
 #define k_padding_normal_section 20.0
@@ -311,6 +312,17 @@
     }
 }
 
+- (void)showUpdateGuide {
+	UpdateGuideViewController *helpGuideWindowViewController = [UpdateGuideViewController new];
+
+	// only for iPad
+	if (!IS_IPHONE) {
+		helpGuideWindowViewController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+		helpGuideWindowViewController.modalPresentationStyle = UIModalPresentationFormSheet;
+	}
+	[self presentViewController:helpGuideWindowViewController animated:YES completion:nil];
+}
+
 #pragma mark - UITableView datasource
 
 // Asks the data source to return the number of sections in the table view.
@@ -367,9 +379,12 @@
             if (k_show_feedback_option_on_settings) {
                 n = n + 1;
             }
-            if (k_show_imprint_option_on_settings) {
-                n = n + 1;
-            }
+			if (k_show_imprint_option_on_settings) {
+				n = n + 1;
+			}
+			if (k_show_update_guide) {
+				n = n + 1;
+			}
             break;
             
         default:
@@ -544,9 +559,9 @@
                 [self setTitleOfRow:recommend inCell:cell];
             } else if (k_show_feedback_option_on_settings) {
                 [self setTitleOfRow:feedback inCell:cell];
-            } else if (k_show_imprint_option_on_settings) {
-                [self setTitleOfRow:impress inCell:cell];
-            }
+			} else if (k_show_imprint_option_on_settings) {
+				[self setTitleOfRow:impress inCell:cell];
+			}
             break;
             
         case 1:
@@ -569,12 +584,23 @@
                 [self setTitleOfRow:feedback inCell:cell];
             } else if (!k_show_help_option_on_settings || !k_show_recommend_option_on_settings || !k_show_feedback_option_on_settings) {
                 [self setTitleOfRow:impress inCell:cell];
-            }
+			} else if (k_show_update_guide) {
+				[self setTitleOfRow:update inCell:cell];
+			}
             break;
             
         case 3:
-            [self setTitleOfRow:impress inCell:cell];
+			if (k_show_imprint_option_on_settings) {
+				[self setTitleOfRow:impress inCell:cell];
+			} else if (k_show_update_guide) {
+				[self setTitleOfRow:update inCell:cell];
+			}
             break;
+		case 4:
+			if (k_show_update_guide) {
+				[self setTitleOfRow:update inCell:cell];
+			}
+			break;
             
         default:
             break;
@@ -627,18 +653,26 @@
             //Add accesibility label for Automation
             cell.accessibilityLabel = ACS_SETTINGS_SEND_FEEDBACK_CELL;
             break;
-            
-        case impress:
-            cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-            cell.textLabel.text = NSLocalizedString(@"imprint_button", nil);
-            [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
-            
-            //Add accesibility label for Automation
-            cell.accessibilityLabel = ACS_SETTINGS_IMPRESS_CELL;
-            break;
-            
-        default:
-            break;
+
+		case impress:
+			cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+			cell.textLabel.text = NSLocalizedString(@"imprint_button", nil);
+			[cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+
+			//Add accesibility label for Automation
+			cell.accessibilityLabel = ACS_SETTINGS_IMPRESS_CELL;
+			break;
+
+		case update:
+			cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+			cell.textLabel.text = NSLocalizedString(@"message_update_slide_0", nil);
+			cell.textLabel.textAlignment = NSTextAlignmentCenter;
+			cell.textLabel.textColor = [UIColor colorOfLoginErrorText];
+			[cell setAccessoryType:UITableViewCellAccessoryNone];
+
+			//Add accesibility label for Automation
+			cell.accessibilityLabel = ACS_SETTINGS_UPDATE_CELL;
+			break;
     }
 }
 
@@ -968,8 +1002,17 @@
             }
             break;
         case 3:
-            [self setContentOfRow:impress];
+			if (k_show_imprint_option_on_settings) {
+				[self setContentOfRow:impress];
+			} else if (k_show_update_guide) {
+				[self setContentOfRow:update];
+			}
             break;
+		case 4:
+			if (k_show_update_guide) {
+				[self setContentOfRow:update];
+			}
+			break;
         default:
             break;
     }
@@ -1049,9 +1092,12 @@
         case feedback:
             [self sendFeedbackByMail];
             break;
-        case impress:
-            [self goImprint];
-            break;
+		case impress:
+			[self goImprint];
+			break;
+		case update:
+			[self showUpdateGuide];
+			break;
         default:
             break;
     }
