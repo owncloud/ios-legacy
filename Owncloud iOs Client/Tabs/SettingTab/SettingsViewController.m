@@ -665,7 +665,7 @@
 
 		case update:
 			cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-			cell.textLabel.text = NSLocalizedString(@"message_update_slide_0", nil);
+			cell.textLabel.text = NSLocalizedString(@"title_update_slide_0", nil);
 			cell.textLabel.textAlignment = NSTextAlignmentCenter;
 			cell.textLabel.textColor = [UIColor colorOfLoginErrorText];
 			[cell setAccessoryType:UITableViewCellAccessoryNone];

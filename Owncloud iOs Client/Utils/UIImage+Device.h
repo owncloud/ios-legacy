@@ -1,8 +1,8 @@
 //
-//  UpdateGuideViewController.h
+//  UIImage+UIImage_Device.h
 //  Owncloud iOs Client
 //
-//  Created by Matthias Hühne on 26.06.19.
+//  Created by Matthias Hühne on 28.06.19.
 //
 
 /*
@@ -13,15 +13,13 @@
  along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
  */
 
-#import "HelpGuideViewController.h"
+#import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface UpdateGuideViewController : HelpGuideViewController
+@interface UIImage (Device)
 
-@property (nonatomic, strong) UIButton *closeButton;
-@property (nonatomic, strong) UIImageView *appIcon;
-@property (nonatomic, strong) UIImageView *fileAction;
++ (UIImage *)deviceImageNamed:(NSString *)imageName;
 
 @end
 

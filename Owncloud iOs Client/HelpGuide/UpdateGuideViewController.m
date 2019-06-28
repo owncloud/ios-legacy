@@ -5,9 +5,18 @@
 //  Created by Matthias Hühne on 26.06.19.
 //
 
+/*
+ Copyright (C) 2019, ownCloud GmbH.
+ This code is covered by the GNU Public License Version 3.
+ For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ You should have received a copy of this license
+ along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ */
+
 #import "UpdateGuideViewController.h"
 #import "UIColor+Constants.h"
 #import "MyCustomAnimation.h"
+#import "UIImage+Device.h"
 
 @implementation UpdateGuideViewController
 
@@ -18,7 +27,7 @@
 	NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
 	self.welcomeLabel.text = [NSLocalizedString(@"title_update_slide_0", nil) stringByReplacingOccurrencesOfString:@"$appname" withString:appName];
 	self.welcomeLabel.textColor = [UIColor colorOfLoginText];
-	[self.welcomeLabel setFont:[UIFont boldSystemFontOfSize:22]];
+	[self.welcomeLabel setFont:[UIFont boldSystemFontOfSize:20]];
 	[self.welcomeLabel sizeToFit];
 	[self.contentView addSubview:self.welcomeLabel];
 
@@ -123,37 +132,37 @@
 }
 
 - (void)configureView0 {
-	self.owncloudLogo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"teaser_photos"]];
+
+	self.owncloudLogo = [[UIImageView alloc] initWithImage:[UIImage deviceImageNamed:@"teaser_photos"]];
 	[self.contentView addSubview:self.owncloudLogo];
 }
 
 - (void)configureView1 {
-	//self.owncloudLogo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"teaser_pdf"]];
-	self.iphoneInstantUpload = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"teaser_pdf"]];
+	self.iphoneInstantUpload = [[UIImageView alloc] initWithImage:[UIImage deviceImageNamed:@"teaser_pdf"]];
 	[self.contentView addSubview:self.iphoneInstantUpload];
 }
 
 - (void)configureView2 {
 
-	self.fileAction = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"teaser_action"]];
+	self.fileAction = [[UIImageView alloc] initWithImage:[UIImage deviceImageNamed:@"teaser_action"]];
 	[self.contentView addSubview:self.fileAction];
 	self.iphoneFiles = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"iphoneFiles"]];
 	[self.contentView addSubview:self.iphoneFiles];
 }
 
 - (void)configureView3 {
-	self.iphoneShare = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"teaser_quick"]];
+	self.iphoneShare = [[UIImageView alloc] initWithImage:[UIImage deviceImageNamed:@"teaser_quick"]];
 	[self.contentView addSubview:self.iphoneShare];
 }
 
 - (void)configureView4 {
-	self.iphoneAccounts = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"teaser_accounts"]];
+	self.iphoneAccounts = [[UIImageView alloc] initWithImage:[UIImage deviceImageNamed:@"teaser_accounts"]];
 	[self.contentView addSubview:self.iphoneAccounts];
 }
 
 - (void)configureView5 {
 
-	self.appIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"teaser_app_icon"]];
+	self.appIcon = [[UIImageView alloc] initWithImage:[UIImage deviceImageNamed:@"teaser_app_icon"]];
 	self.appIcon.layer.masksToBounds = YES;
 	self.appIcon.layer.cornerRadius = 30;
 	[self.contentView addSubview:self.appIcon];
