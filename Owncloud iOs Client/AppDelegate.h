@@ -310,6 +310,7 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 
 - (void) launchProcessToSyncAllFavorites;
 
+- (void)showHelpOrPassCodeIfNeeded;
 - (void) showPassCodeIfNeeded;
 
 

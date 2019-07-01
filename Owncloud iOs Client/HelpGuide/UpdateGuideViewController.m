@@ -537,7 +537,7 @@
 	[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"didShowUpdateGuide"];
 	AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 
-	[app showPassCodeIfNeeded];
+	[app showHelpOrPassCodeIfNeeded];
 }
 
 @end

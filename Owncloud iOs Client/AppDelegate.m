@@ -1649,6 +1649,15 @@ float shortDelay = 0.3;
         [[ManageTouchID sharedSingleton] showTouchIDAuth];
 }
 
+- (void)showHelpOrPassCodeIfNeeded {
+	if (k_show_main_help_guide && [ManageDB getShowHelpGuide]) {
+		self.helpGuideWindowViewController = [HelpGuideViewController new];
+		self.window.rootViewController = self.helpGuideWindowViewController;
+	} else {
+		[self showPassCodeIfNeeded];
+	}
+}
+
 - (void)showPassCodeIfNeeded {
     if (([ManageAppSettingsDB isPasscode] || k_is_passcode_forced) && (!_isPasscodeVisible) && ([PresentedViewUtils isSSOViewControllerPresentedAndLoading:self.window] == false)) {
         dispatch_async(dispatch_get_main_queue(), ^{
