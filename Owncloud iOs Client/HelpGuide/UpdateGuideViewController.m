@@ -534,7 +534,7 @@
 }
 
 - (void)dismissView:(UIButton *)sender {
-	[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"didShowUpdateGuide"];
+	[[NSUserDefaults standardUserDefaults] setObject:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"] forKey:@"didShowUpdateGuideAtVersion"];
 	AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 
 	[app showHelpOrPassCodeIfNeeded];

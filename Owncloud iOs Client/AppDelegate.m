@@ -180,9 +180,10 @@ float shortDelay = 0.3;
     
     UserDto *user = [ManageUsersDB getActiveUser];
 
-
-
-    if (user) {
+	if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"didShowUpdateGuideAtVersion"] isEqualToString:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]] == NO) {
+		self.updateGuideWindowViewController = [UpdateGuideViewController new];
+		self.window.rootViewController = self.updateGuideWindowViewController;
+	} else if (user) {
 
         self.activeUser = [user copy];
         [UtilsCookies deleteCurrentSystemCookieStorageAndRestoreTheCookiesOfActiveUser];
@@ -209,9 +210,6 @@ float shortDelay = 0.3;
         }
         
         
-	} else if (![[NSUserDefaults standardUserDefaults] boolForKey:@"didShowUpdateGuide"]) {
-		self.updateGuideWindowViewController = [UpdateGuideViewController new];
-		self.window.rootViewController = self.updateGuideWindowViewController;
 	} else if (k_show_main_help_guide && [ManageDB getShowHelpGuide]) {
 		self.helpGuideWindowViewController = [HelpGuideViewController new];
 		self.window.rootViewController = self.helpGuideWindowViewController;
