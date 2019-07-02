@@ -1140,13 +1140,26 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
             }
         }
         
-        AVPlayer *player;
+        AVPlayer *player = nil;
+        UIImage *image = nil;
         
         if (self.file.isDownload) {
             
             NSURL *url = [NSURL fileURLWithPath:_file.localFolder];
             player = [AVPlayer playerWithURL:url];
+            //FileName full path
+            NSString *path = [UtilsUrls  getFullRemoteServerFilePathByFile:self.file andUser:APP_DELEGATE.activeUser];
             
+            self.asset = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:path] options:@{@"AVURLAssetHTTPHeaderFieldsKey" : [UtilsNetworkRequest getHttpLoginHeaders]}];
+            
+            for (AVMetadataItem *item in [self.asset commonMetadata]) {
+                if ([[item commonKey] isEqualToString:@"artwork"]) {
+                    NSData *data = [item dataValue];
+                    image = [UIImage imageWithData:data];
+                    
+                    break;
+                }
+            }
         } else {
             
             //FileName full path
@@ -1171,6 +1184,58 @@ NSString * iPhoneShowNotConnectionWithServerMessageNotification = @"iPhoneShowNo
         self.avMoviePlayer.view.frame = self.view.frame;
         
         [self.avMoviePlayer.contentOverlayView addObserver:self forKeyPath:[MediaAVPlayerViewController observerKeyFullScreen] options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:NULL];
+        
+
+        if (image != nil) {
+            UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
+            imageView.translatesAutoresizingMaskIntoConstraints = NO;
+            
+            [imageView setContentMode:UIViewContentModeScaleAspectFit];
+
+            NSLayoutConstraint *top = [NSLayoutConstraint
+                                          constraintWithItem:imageView
+                                          attribute:NSLayoutAttributeTop
+                                          relatedBy:NSLayoutRelationEqual
+                                          toItem:self.avMoviePlayer.contentOverlayView
+                                          attribute:NSLayoutAttributeTop
+                                          multiplier:1.0
+                                          constant:40.0];
+
+            NSLayoutConstraint *bottom = [NSLayoutConstraint
+                                           constraintWithItem:imageView
+                                           attribute:NSLayoutAttributeBottom
+                                           relatedBy:NSLayoutRelationEqual
+                                           toItem:self.avMoviePlayer.contentOverlayView
+                                           attribute:NSLayoutAttributeBottom
+                                           multiplier:1.0
+                                           constant:-40.0];
+            
+            NSLayoutConstraint *trailing = [NSLayoutConstraint
+                                           constraintWithItem:imageView
+                                           attribute:NSLayoutAttributeTrailing
+                                           relatedBy:NSLayoutRelationEqual
+                                           toItem:self.avMoviePlayer.contentOverlayView
+                                           attribute:NSLayoutAttributeTrailing
+                                           multiplier:1.0
+                                           constant:-20.0];
+            
+            NSLayoutConstraint *leading = [NSLayoutConstraint
+                                            constraintWithItem:imageView
+                                            attribute:NSLayoutAttributeLeading
+                                            relatedBy:NSLayoutRelationEqual
+                                            toItem:self.avMoviePlayer.contentOverlayView
+                                            attribute:NSLayoutAttributeLeading
+                                            multiplier:1.0
+                                            constant:20.0];
+
+            [self.avMoviePlayer.contentOverlayView addConstraint:top];
+            [self.avMoviePlayer.contentOverlayView addConstraint:bottom];
+            [self.avMoviePlayer.contentOverlayView addConstraint:trailing];
+            [self.avMoviePlayer.contentOverlayView addConstraint:leading];
+            
+            [self.avMoviePlayer.contentOverlayView addSubview:imageView];
+            [self.avMoviePlayer.contentOverlayView setBackgroundColor:[UIColor blackColor]];
+        }
         
         [self configureView];
     }
