@@ -4053,7 +4053,7 @@
 				LastUpgradeCheck = 0800;
 				TargetAttributes = {
 					1324297715ADBB3700DF823E = {
-						DevelopmentTeam = 4AP2STM4H5;
+						DevelopmentTeam = 9B5WD74GWJ;
 						LastSwiftMigration = 0900;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
@@ -4068,11 +4068,11 @@
 						};
 					};
 					132429AC15ADBB3800DF823E = {
-						DevelopmentTeam = 4AP2STM4H5;
+						DevelopmentTeam = 9B5WD74GWJ;
 					};
 					EA6606941AA767F700BA2C65 = {
 						CreatedOnToolsVersion = 6.1.1;
-						DevelopmentTeam = 4AP2STM4H5;
+						DevelopmentTeam = 9B5WD74GWJ;
 						LastSwiftMigration = 0900;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
@@ -4085,7 +4085,7 @@
 					};
 					EAB0AB3119ED356A00764C31 = {
 						CreatedOnToolsVersion = 6.0.1;
-						DevelopmentTeam = 4AP2STM4H5;
+						DevelopmentTeam = 9B5WD74GWJ;
 						LastSwiftMigration = 0900;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
@@ -4098,7 +4098,7 @@
 					};
 					EAB0AB3F19ED356A00764C31 = {
 						CreatedOnToolsVersion = 6.0.1;
-						DevelopmentTeam = 4AP2STM4H5;
+						DevelopmentTeam = 9B5WD74GWJ;
 						LastSwiftMigration = 0900;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
@@ -5447,7 +5447,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_RESOURCE_RULES_PATH = "";
 				DEFINES_MODULE = NO;
-				DEVELOPMENT_TEAM = 4AP2STM4H5;
+				DEVELOPMENT_TEAM = 9B5WD74GWJ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -5503,7 +5503,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_RESOURCE_RULES_PATH = "";
 				DEFINES_MODULE = NO;
-				DEVELOPMENT_TEAM = 4AP2STM4H5;
+				DEVELOPMENT_TEAM = 9B5WD74GWJ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -5544,7 +5544,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Owncloud iOs Client.app/Owncloud iOs Client";
-				DEVELOPMENT_TEAM = 4AP2STM4H5;
+				DEVELOPMENT_TEAM = 9B5WD74GWJ;
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Owncloud iOs Client/Owncloud iOs Client-Prefix.pch";
@@ -5575,7 +5575,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Owncloud iOs Client.app/Owncloud iOs Client";
-				DEVELOPMENT_TEAM = 4AP2STM4H5;
+				DEVELOPMENT_TEAM = 9B5WD74GWJ;
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Owncloud iOs Client/Owncloud iOs Client-Prefix.pch";
@@ -5615,7 +5615,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = NO;
-				DEVELOPMENT_TEAM = 4AP2STM4H5;
+				DEVELOPMENT_TEAM = 9B5WD74GWJ;
 				ENABLE_BITCODE = NO;
 				GCC_PREFIX_HEADER = "Owncloud iOs Client/Owncloud iOs Client-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -5667,7 +5667,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = NO;
-				DEVELOPMENT_TEAM = 4AP2STM4H5;
+				DEVELOPMENT_TEAM = 9B5WD74GWJ;
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_PREFIX_HEADER = "Owncloud iOs Client/Owncloud iOs Client-Prefix.pch";
@@ -5722,7 +5722,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = NO;
-				DEVELOPMENT_TEAM = 4AP2STM4H5;
+				DEVELOPMENT_TEAM = 9B5WD74GWJ;
 				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -5789,7 +5789,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = NO;
-				DEVELOPMENT_TEAM = 4AP2STM4H5;
+				DEVELOPMENT_TEAM = 9B5WD74GWJ;
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -5851,7 +5851,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = NO;
-				DEVELOPMENT_TEAM = 4AP2STM4H5;
+				DEVELOPMENT_TEAM = 9B5WD74GWJ;
 				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_PREFIX_HEADER = "Owncloud iOs Client/Owncloud iOs Client-Prefix.pch";
@@ -5910,7 +5910,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = NO;
-				DEVELOPMENT_TEAM = 4AP2STM4H5;
+				DEVELOPMENT_TEAM = 9B5WD74GWJ;
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
