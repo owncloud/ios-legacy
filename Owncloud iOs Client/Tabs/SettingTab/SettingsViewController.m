@@ -314,6 +314,7 @@
 
 - (void)showUpdateGuide {
 	UpdateGuideViewController *helpGuideWindowViewController = [UpdateGuideViewController new];
+	helpGuideWindowViewController.delegate = self;
 
 	// only for iPad
 	if (!IS_IPHONE) {

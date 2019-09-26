@@ -17,6 +17,7 @@
 #import "UIColor+Constants.h"
 #import "MyCustomAnimation.h"
 #import "UIImage+Device.h"
+#import "SettingsViewController.h"
 
 @implementation UpdateGuideViewController
 
@@ -535,9 +536,14 @@
 
 - (void)dismissView:(UIButton *)sender {
 	[[NSUserDefaults standardUserDefaults] setObject:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"] forKey:@"didShowUpdateGuideAtVersion"];
-	AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+	
+	if (_delegate != nil && [_delegate isKindOfClass:[SettingsViewController class]]) {
+		[self dismissViewControllerAnimated:true completion:nil];
+	} else {
+		AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 
-	[app showHelpOrPassCodeIfNeeded];
+		[app showHelpOrPassCodeIfNeeded];
+	}
 }
 
 @end

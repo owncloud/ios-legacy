@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIButton *closeButton;
 @property (nonatomic, strong) UIImageView *appIcon;
 @property (nonatomic, strong) UIImageView *fileAction;
+@property (assign) id delegate;
 
 @end
 
