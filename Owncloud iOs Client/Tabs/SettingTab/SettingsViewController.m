@@ -319,7 +319,6 @@
 	// only for iPad
 	if (!IS_IPHONE) {
 		helpGuideWindowViewController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-		helpGuideWindowViewController.modalPresentationStyle = UIModalPresentationFormSheet;
 	}
 	[self presentViewController:helpGuideWindowViewController animated:YES completion:nil];
 }
