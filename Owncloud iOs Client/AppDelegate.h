@@ -30,6 +30,7 @@
 @class RecentViewController;
 @class SettingsViewController;
 @class HelpGuideViewController;
+@class UpdateGuideViewController;
 @class Download;
 @class OCCommunication;
 @class SyncFolderManager;
@@ -109,6 +110,7 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 }
 
 @property (strong, nonatomic) HelpGuideViewController *helpGuideWindowViewController;
+@property (strong, nonatomic) UpdateGuideViewController *updateGuideWindowViewController;
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) UserDto *activeUser;
 @property (strong, nonatomic) OCTabBarController *ocTabBarController;
@@ -308,6 +310,7 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 
 - (void) launchProcessToSyncAllFavorites;
 
+- (void)showHelpOrPassCodeIfNeeded;
 - (void) showPassCodeIfNeeded;
 
 

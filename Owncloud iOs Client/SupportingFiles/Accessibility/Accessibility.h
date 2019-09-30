@@ -25,4 +25,5 @@
 #define ACS_SETTINGS_RECOMMEND_CELL @"Settings Recommend Cell";
 #define ACS_SETTINGS_SEND_FEEDBACK_CELL @"Settings Send Feedback Cell";
 #define ACS_SETTINGS_IMPRESS_CELL @"Settings Impress Cell";
+#define ACS_SETTINGS_UPDATE_CELL @"Settings Update Cell";
 
