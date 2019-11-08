@@ -18,7 +18,7 @@
 #define k_year 2019
 
 //URLs Setting
-#define k_help_url @"http://owncloud.com/mobile/help"
+#define k_help_url @"https://owncloud.com/mobile/help"
 
 //Hide url server
 #define k_hide_url_server NO
@@ -42,8 +42,8 @@
 #define k_mail_feedback @"apps@owncloud.com"
 
 //Social
-#define k_download_url_short @"http://bit.ly/13haDjE"
-#define k_download_url_long @"https://itunes.apple.com/us/app/owncloud/id543672169?mt=8"
+#define k_download_url_short @"https://bit.ly/13haDjE"
+#define k_download_url_long @"https://apps.apple.com/us/app/owncloud/id543672169"
 #define k_twitter_user @"@ownCloud"
 
 //Minimun files until show letters on separators
