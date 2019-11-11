@@ -64,6 +64,9 @@
 //Show impressum
 #define k_show_imprint_option_on_settings NO
 
+//Show App Update Guide
+#define k_show_update_guide YES
+
 //Customize UITabBar
 #define k_is_customize_uitabbar YES
 

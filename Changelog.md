@@ -1,8 +1,15 @@
+## 3.8.2 (Oct 2019)
+
+- Announce deprecation, notify users about a new ownCloud iOS app
+- Show Cover on Media Player
+
 ## 3.8.1 (Feb 2019)
+
 - Fix share translations
 - Fix Document Provider
 
 ## 3.8.0 (Aug 2018)
+
 - New look for public link view
 - Add control of reshares for the content owner
 - Fix problem in the browsability of target folder selection
