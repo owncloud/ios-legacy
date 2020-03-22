@@ -95,9 +95,7 @@
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Used to save your selected photo to your camera roll</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Used to upload your selected photos to your account</string>
-	<key>UIApplicationExitsOnSuspend</key>
-	<false/>
+	<string>Used to upload your selected photos to your account</string>	
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
