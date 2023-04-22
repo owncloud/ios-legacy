@@ -70,10 +70,21 @@
 #define k_navigation_bar_height 44
 #define k_navigation_bar_height_in_iphone_landscape 32
 
+//typedef NS_ENUM(NSInteger, SELECTTYPE){
+//    ENDMOVE = 0,
+//    ENDDELETE = 1
+//};
+
+typedef NS_ENUM(NSInteger, SELECTTYPE) {
+    ENDMOVE,
+    ENDDELETE
+};
+
 @interface FilesViewController ()
 
 @property (nonatomic, strong) ELCAlbumPickerController *albumController;
 @property (nonatomic, strong) ELCImagePickerController *elcPicker;
+@property (nonatomic, assign) SELECTTYPE selectType;
 @property (nonatomic) BOOL didLayoutSubviews;
 @property (nonatomic) BOOL willLayoutSubviews;
 
@@ -98,7 +109,7 @@
  */
 - (id) initWithNibName:(NSString *) nibNameOrNil onFolder:(NSString *) currentFolder andFileId:(NSInteger) fileIdToShowFiles andCurrentLocalFolder:(NSString *)currentLocalFoler
 {
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];    
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     //If is 0 is root folder
     if(fileIdToShowFiles == 0) {
         _fileIdToShowFiles = [ManageFilesDB getRootFileDtoByUser:app.activeUser];
@@ -170,7 +181,8 @@
     
     //Add a more button
     UIBarButtonItem *addButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"more-filled"] style:UIBarButtonItemStylePlain target:self action:@selector(showOptions)];
-    self.navigationItem.rightBarButtonItem = addButtonItem;
+    self.navigationItem.rightBarButtonItems = @[addButtonItem,self.editButtonItem];
+    //    self.navigationItem.rightBarButtonItem = addButtonItem;
     
     // Create a searchBar and a displayController "Future Option"
     //UISearchBar *searchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(0.0f, 0.0f, 320.0f, 44.0f)];
@@ -284,7 +296,7 @@
         [self initLoading];
         
     }
-
+    
 }
 
 - (void)initFilesView {
@@ -767,7 +779,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(endLoading) name:EndLoadingFileListNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(initLoading) name:InitLoadingFileListNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTableFromDataBase) name:ReloadFileListFromDataBaseNotification object:nil];
-        
+    
     //Add an observer for know when the Checked Share of server is done
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshSharedPath) name:RefreshSharesItemsAfterCheckServerVersion object:nil];
     
@@ -1242,6 +1254,19 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
+    if (tableView.isEditing){
+        FileDto *file = (FileDto *)[[self.sortedArray objectAtIndex:indexPath.section]objectAtIndex:indexPath.row];
+        
+        file.isSelected = !file.isSelected;
+        
+        CustomCellFileAndDirectory *fileCell = (CustomCellFileAndDirectory *)[tableView cellForRowAtIndexPath:indexPath];
+        
+         fileCell.editingAccessoryType = file.isSelected ? UITableViewCellAccessoryCheckmark:UITableViewCellAccessoryNone;
+
+        return;
+        
+    }
+    
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     // If the selected cell is showing the SwipeMenu, we don´t navigate further
@@ -1278,7 +1303,7 @@
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return NO;
+    return YES;
 }
 
 #pragma mark - UITableView datasource
@@ -1345,6 +1370,12 @@
         }
         
         FileDto *file = (FileDto *)[[_sortedArray objectAtIndex:indexPath.section]objectAtIndex:indexPath.row];
+        
+        if (tableView.isEditing){
+           
+            fileCell.editingAccessoryType = file.isSelected ? UITableViewCellAccessoryCheckmark:UITableViewCellAccessoryNone;
+        
+        }
         
         NSDate* date = [NSDate dateWithTimeIntervalSince1970:file.date];
         NSString *fileDateString;
@@ -1443,6 +1474,35 @@
     return cell;
 }
 
+- (void)setEditing:(BOOL)editing animated:(BOOL)animated{
+    [super setEditing:editing animated:animated];
+   
+    if (!editing)
+    {
+        if (self.plusActionSheet) {
+            self.plusActionSheet = nil;
+        }
+        
+        self.plusActionSheet = [[UIActionSheet alloc]initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"cancel", nil) destructiveButtonTitle:NSLocalizedString(@"delete_label", nil) otherButtonTitles:NSLocalizedString(@"move_long_press", nil),nil];
+        
+        self.plusActionSheet.actionSheetStyle=UIActionSheetStyleDefault;
+        self.plusActionSheet.tag=150;
+        if (IS_IPHONE) {
+            [self.plusActionSheet showInView:self.tabBarController.view];
+        } else {
+            
+            AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+            
+            [self.plusActionSheet showInView:app.splitViewController.view];
+        }
+    }else{
+        [self.tableView setEditing:editing animated:animated];
+    }
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return UITableViewCellEditingStyleNone;
+}
 // Asks the data source to return the number of sections in the table view.
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -1945,9 +2005,11 @@
 - (void) syncFavoritesByFolder:(FileDto *) folder {
     
     //Launch the method to sync the favorites files with specific path
-    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    [[AppDelegate sharedManageFavorites] syncFavoritesOfFolder:folder withUser:app.activeUser.userId];
-    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+        [[AppDelegate sharedManageFavorites] syncFavoritesOfFolder:folder withUser:app.activeUser.userId];
+    });
+   
 }
 
 /*
@@ -2315,7 +2377,24 @@
         }
     }
     
-    //Long press menu    
+    if (actionSheet.tag==150){
+        
+        switch (buttonIndex) {
+            case 0:
+                 self.selectType = ENDDELETE;
+                [self didSelectionMultipeMoveOption];
+                break;
+            case 1:
+                self.selectType = ENDMOVE;
+                [self didSelectionMultipeMoveOption];
+                break;
+            default:
+                [self.tableView setEditing:NO animated:YES];
+                break;
+        }
+    }
+    
+    //Long press menu
     if (actionSheet.tag==200) {
         if(_selectedFileDto.isDirectory) {
             switch (buttonIndex) {
@@ -2646,10 +2725,10 @@
  * over the selected file
  */
 - (void)didSelectRenameOption {
-     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     //Update fileDto
-  self.selectedFileDto = [ManageFilesDB getFileDtoByFileName:self.selectedFileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
+    self.selectedFileDto = [ManageFilesDB getFileDtoByFileName:self.selectedFileDto.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:self.selectedFileDto.filePath andUser:app.activeUser] andUser:app.activeUser];
     
     if ([_selectedFileDto isDownload] == downloading) {
         //if the file is downloading alert the user
@@ -2680,6 +2759,73 @@
 /*
  * Method called when the user select the move option
  */
+-(void)didSelectionMultipeMoveOption{
+    
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSInteger sections = _tableView.numberOfSections;
+    app.multipleSelectedFileDto = [[NSMutableArray alloc]init];
+    [app.multipleSelectedFileDto removeAllObjects];
+    
+    for (int section = 0; section < sections; section++) {
+        NSInteger rows =  [_tableView numberOfRowsInSection:section];
+        for (int row = 0; row < rows; row++) {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:section];
+            
+          FileDto *selectedFile = (FileDto *)[[self.sortedArray objectAtIndex:indexPath.section]objectAtIndex:indexPath.row];
+            
+            if (selectedFile.isSelected){
+                selectedFile = [ManageFilesDB getFileDtoByFileName:selectedFile.fileName andFilePath:[UtilsUrls getFilePathOnDBByFilePathOnFileDto:selectedFile.filePath andUser:app.activeUser] andUser:app.activeUser];
+                [app.multipleSelectedFileDto addObject:selectedFile];
+            }
+        }
+        
+    }
+    
+    FileDto *firstFile = app.multipleSelectedFileDto.firstObject;
+    
+    _selectedFileDto = firstFile;
+    
+    if ([_selectedFileDto.fileName isEqualToString:app.detailViewController.file.fileName] &&
+        [_selectedFileDto.filePath isEqualToString:app.detailViewController.file.filePath] &&
+        _selectedFileDto.userId == app.detailViewController.file.userId) {
+        app.detailViewController.file = _selectedFileDto;
+    }
+    NSString * observerForName = @"";
+   
+    switch (self.selectType) {
+        case ENDMOVE:
+            [self didSelectMoveOption];
+            observerForName = @"endMove";
+            break;
+        case ENDDELETE:
+            [self didSelectDeleteOption];
+            observerForName = @"endDelete";
+             break;
+    }
+   
+    NSOperationQueue *mainQueue =  [[NSOperationQueue alloc]init];
+   
+    __block NSInteger i = 0;
+    
+    [[NSNotificationCenter defaultCenter]addObserverForName:observerForName object:nil queue:mainQueue usingBlock:^(NSNotification *note) {
+        if (i < app.multipleSelectedFileDto.count - 1){
+            i ++;
+            FileDto *file = [app.multipleSelectedFileDto objectAtIndex:i];
+            self.selectedFileDto = file;
+            [self folderSelected:app.currentFolder];
+            //last
+            if (i == app.multipleSelectedFileDto.count - 1){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.tableView setEditing:NO animated:YES];
+                });
+                
+            }
+        }
+        
+    }];
+    
+    
+}
 - (void)didSelectMoveOption {
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
@@ -2920,7 +3066,7 @@
  * this method close de backgroundtask
  */
 - (void)endMoveBackGroundTask {
-    
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"endMove" object:self];
     if (_moveTask) {
         [[UIApplication sharedApplication] endBackgroundTask:_moveTask];
     }
@@ -3027,7 +3173,8 @@
  * @folder -> folder selected. 
  */
 - (void)folderSelected:(NSString*)folder {
-
+    AppDelegate *app = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    app.currentFolder = folder;
     DLog(@"Folder: %@", folder);
     
    // [self pauseDonwloadsQueue];

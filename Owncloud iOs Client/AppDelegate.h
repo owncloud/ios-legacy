@@ -151,7 +151,8 @@ extern NSString * NotReachableNetworkForDownloadsNotification;
 @property (nonatomic, strong) NSString *urlServerRedirected;
 @property (nonatomic, strong) ManageDownloads *downloadManager;
 @property (nonatomic, strong) NSString *userSessionCurrentToken;
-
+@property (nonatomic ,strong) NSMutableArray *multipleSelectedFileDto;
+@property (nonatomic,strong) NSString *currentFolder;
 @property (nonatomic, strong) OCOAuth2Configuration *oauth2Configuration;
 
 /*

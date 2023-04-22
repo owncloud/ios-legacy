@@ -1994,6 +1994,7 @@
     self.view.userInteractionEnabled = YES;
     self.navigationController.navigationBar.userInteractionEnabled = YES;
     self.tabBarController.tabBar.userInteractionEnabled = YES;
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"endDelete" object:self];
 }
 
 #pragma mark - UIAlertView delegate methods

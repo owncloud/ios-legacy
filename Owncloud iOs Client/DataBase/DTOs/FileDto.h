@@ -50,7 +50,7 @@ typedef enum {
 @property (nonatomic) NSInteger providingFileId;
 @property (nonatomic, copy) NSString *ocId;
 @property (nonatomic, copy) NSString *ocPrivatelink;
-
+@property  BOOL isSelected;
 ///-----------------------------------
 /// @name Init with OCFileDto
 ///-----------------------------------
